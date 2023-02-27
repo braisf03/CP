@@ -64,5 +64,5 @@ Para la operación 2:
 
 ## Ejercicio 6 (Separar el cálculo de hashes a varios threads) 
 
-Separe el c ́alculo de los hashesde cada fichero a comprobar en varios threads. 
+Separe el cálculo de los hashesde cada fichero a comprobar en varios threads. 
 Una vez hecho este paso, el programa deber ́ıafuncionar con una cola de entrada de longitud 1.
