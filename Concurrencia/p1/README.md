@@ -43,7 +43,7 @@ el número especificado de iteraciones.
 
 En ningún momento debería ser posible que otro thread viera el valor en tránsito, es decir, si
 antes de empezar el movimiento la suma del array es n, en todo momento la suma tiene que ser
->= n. Puede ser mayor si otro thread está incrementando otra variable al mismo tiempo.
+>=n. Puede ser mayor si otro thread está incrementando otra variable al mismo tiempo.
 
 ## Ejercicio 4 (Iteraciones)
 
