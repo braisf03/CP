@@ -32,9 +32,13 @@ En caso de haber diferencias, se imprime un mensaje.
 
 El programa acepta las siguientes opciones:
 
--`-t n`, para especificar el n ́umero de threads que vamos a crear.
+- `-i n`, para controlar el número de iteraciones que cada thread va a hacer.
 
--`-q n`, para controlar el tama ̃no de las colas de entrada y salida.
+- `-t n`, para especificar el número de threads que vamos a crear.
+
+- `-a n`, para controlar el tamaño del array.
+
+- `-d n`, para cambiar el tiempo de espera entre operaciones.
 
 Partiendo de este c ́odigo se pide modificar el comportamiento del programa para la operación
 1 de la siguiente forma:
