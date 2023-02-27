@@ -8,11 +8,11 @@ Vamos a implementar un comprobador mediante md5, que dado un directorio permita 
 dos operaciones:
 
   1. md5 -s dir file, que calcula la suma de todos los ficheros contenidos en dir y la guarda
-     en file. Dentro de file habr ́a una linea por cada fichero de dir, con el nombre del fichero
+     en file. Dentro de file habrá una línea por cada fichero de dir, con el nombre del fichero
      y su hash md5.
    
   2. md5 -c dir file, que dado un fichero generado mediante la orden anterior, comprueba la
-     correcci ́on de los ficheros almacenados en dir.
+     corrección de los ficheros almacenados en dir.
    
 El código proporcionado implementa la versión secuencial de este problema. Para la operación
 1, el programa:
@@ -62,7 +62,9 @@ Para la operación 2:
 
 ## Ejercicio 5 (Separar la lectura del fichero con la lista de hashes a un thread independiente)
 
+Separe la lectura de cada fichero a un thread por cada uno.
+
 ## Ejercicio 6 (Separar el cálculo de hashes a varios threads) 
 
-Separe el cálculo de los hashesde cada fichero a comprobar en varios threads. 
-Una vez hecho este paso, el programa deber ́ıafuncionar con una cola de entrada de longitud 1.
+Separe el cálculo de los hashes de cada fichero a comprobar en varios threads. 
+Una vez hecho este paso, el programa debería funcionar con una cola de entrada de longitud 1.
