@@ -7,6 +7,10 @@ incrementa una posición aleatoria del array. Si el programa funciona correctame
 los valores guardados en el array debería ser el número de threads multiplicado por el número de
 iteraciones.
 
+Nota: Cada apartado del ejercicio es una ampliación del anterior por lo que 
+Original ⊂ Ej1 ⊂ Ej2 ⊂ Ej3 ⊂ Ej4, haciendo que el Ej4 sea una combinación de
+todos los ejercicios anteriores.
+
 El código proporcionado implementa la versión secuencial de este problema, y acepta las si-
 guientes opciones:
 
@@ -56,7 +60,3 @@ Es decir, si se especifica que hay que hacer 100 iteraciones, deberían hacerse 
 el array debería ser igual al número de iteraciones.
 
 La cuenta de las iteraciones debería hacerse mediante un contador compartido.
-
-Nota: Cada apartado del ejercicio es una ampliación del anterior por lo que 
-Original ⊂ Ej1 ⊂ Ej2 ⊂ Ej3 ⊂ Ej4, haciendo que el Ej4 sea una combinación de
-todos los ejercicios anteriores.
