@@ -1,6 +1,5 @@
 # Práctica 1 – Array de Enteros
 
-
 Implemente un sistema en el que varios threads comparten un array que empieza con sus
 posiciones a 0. Cada thread debe realizar un número de iteraciones, donde en cada iteración
 incrementa una posición aleatoria del array. Si el programa funciona correctamente, la suma de
