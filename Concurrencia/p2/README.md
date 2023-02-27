@@ -7,21 +7,24 @@ la corrección de secuencias de datos como ficheros, bloques transmitidos por re
 Vamos a implementar un comprobador mediante md5, que dado un directorio permita realizar
 dos operaciones:
 
-1. md5 -s dir file, que calcula la suma de todos los ficheros contenidos en dir y la guarda
-   en file. Dentro de file habr ́a una linea por cada fichero de dir, con el nombre del fichero
-   y su hash md5.
+  1. md5 -s dir file, que calcula la suma de todos los ficheros contenidos en dir y la guarda
+     en file. Dentro de file habr ́a una linea por cada fichero de dir, con el nombre del fichero
+     y su hash md5.
    
-2. md5 -c dir file, que dado un fichero generado mediante la orden anterior, comprueba la
-   correcci ́on de los ficheros almacenados en dir.
+  2. md5 -c dir file, que dado un fichero generado mediante la orden anterior, comprueba la
+     correcci ́on de los ficheros almacenados en dir.
    
-El c ́odigo proporcionado implementa la versi ́on secuencial de este problema. Para la operaci ́on
+El código proporcionado implementa la versión secuencial de este problema. Para la operación
 1, el programa:
-1. Lista los ficheros contenidos en el dir, y guarda sus nombres en una cola.
-2. Se itera sobre la cola, y para cada elemento se calcula su hash md5 y se guarda en una cola
-de salida.
-3. Para cada elemento de la cola de salida, se escribe una l ́ınea en el fichero con la lista de
-hashes.
+
+  1. Lista los ficheros contenidos en el dir, y guarda sus nombres en una cola.
+  2. Se itera sobre la cola, y para cada elemento se calcula su hash md5 y se guarda en una cola
+     de salida.
+  3. Para cada elemento de la cola de salida, se escribe una l ́ınea en el fichero con la lista de
+     hashes.
+
 Para la operaci ́on 2:
+
 1. Genera una lista con los ficheros y hashes guardados en file y se guarda en una cola.
 2. Para cada fichero de la cola, se calcula el hash y se compara con el almacenado en el fichero.
 En caso de haber diferencias, se imprime un mensaje.
