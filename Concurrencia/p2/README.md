@@ -26,12 +26,17 @@ El código proporcionado implementa la versión secuencial de este problema. Par
 Para la operaci ́on 2:
 
 1. Genera una lista con los ficheros y hashes guardados en file y se guarda en una cola.
+
 2. Para cada fichero de la cola, se calcula el hash y se compara con el almacenado en el fichero.
 En caso de haber diferencias, se imprime un mensaje.
+
 El programa acepta las siguientes opciones:
--t n, para especificar el n ́umero de threads que vamos a crear.
--q n, para controlar el tama ̃no de las colas de entrada y salida.
-Partiendo de este c ́odigo se pide modificar el comportamiento del programa para la operaci ́on
+
+-`-t n`, para especificar el n ́umero de threads que vamos a crear.
+
+-`-q n`, para controlar el tama ̃no de las colas de entrada y salida.
+
+Partiendo de este c ́odigo se pide modificar el comportamiento del programa para la operación
 1 de la siguiente forma:
 
 ## Ejercicio 1 (Proteger la cola frente a accesos concurrentes)
@@ -40,20 +45,24 @@ Modifique la implementación de la cola para que permite inserciones y borrados 
 
 ## Ejercicio 2 (Separar la generaci ́on del listado de fichero del directorio en un thread independiente) 
 
-Separe el proceso de leer la lista de ficheros a su propio thread. Una vez hechoslos dos 
+Separe el proceso de leer la lista de ficheros a su propio thread. Una vez hechos los dos 
 primeros ejercicios deber ́ıa ser posible modificar el tama ̃no de la cola de entrada a 1, y el
 programa deber ́ıa seguir funcionando.
 
-## Ejercicio 3 (Separar el c ́alculo de hashes a varios threads) Separe en c ́alculo de hashes
-md5 de tal forma que se haga en los threads especificados en las opciones.
+## Ejercicio 3 (Separar el c ́alculo de hashes a varios threads) 
+
+Separe en c ́alculo de hashesmd5 de tal forma que se haga en los threads especificados en las opciones.
+
 ## Ejercicio 4 (Separar la escritura) 
+
 Separar la escritura de los hashes calculados a su propiothread. Una vez implementado 
 este punto el programa deber ́ıa funcionar aunque la cola de salida tenga longitud 1.
 
-Para la operaci ́on 2:
+Para la operación 2:
 
 ## Ejercicio 5 (Separar la lectura del fichero con la lista de hashes a un thread independiente)
 
 ## Ejercicio 6 (Separar el c ́alculo de hashes a varios threads) 
+
 Separe el c ́alculo de los hashesde cada fichero a comprobar en varios threads. 
 Una vez hecho este paso, el programa deber ́ıafuncionar con una cola de entrada de longitud 1.
