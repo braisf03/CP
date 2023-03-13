@@ -36,7 +36,7 @@ int main(int argc, char **argv) {
     // Longitud de la cadena e inicialización.
     n = atoi(argv[1]);
     char *str = (char *) malloc(n * sizeof(char));
-
+    inicializaCadena(str, n);
 
     // Iniciamos el MPI (Message Passing Interface).
     MPI_Init(&argc, &argv);
@@ -47,7 +47,8 @@ int main(int argc, char **argv) {
     // Dividir la cadena en trozos iguales.
     int chunk_size = n / size;
     char *local_str = malloc(chunk_size + 1);
-    inicializaCadena(str, n);
+   
+    
     // Enviar los trozos de la cadena a cada proceso.
     if (rank == 0) { // Si el proceso es el 0, se envia cada trozo de la cadena a cada MPI.
         for (i = 0; i < size; i++) {
