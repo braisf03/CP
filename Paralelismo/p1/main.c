@@ -46,12 +46,14 @@ int main(int argc, char **argv) {
 
     // Dividir la cadena en trozos iguales.
     int chunk_size = n / size;
-    char *local_str = malloc(chunk_size);
+    char *local_str = malloc((chunk_size-1)*sizeof(char));
 
     // Enviar los trozos de la cadena a cada proceso.
     if (rank == 0) { // Si el proceso es el 0, se envia cada trozo de la cadena a cada MPI.
+
         for (i = 0; i < size; i++) {
             strncpy(local_str, str + i * chunk_size, chunk_size);
+            local_str[chunk_size]='\0';
             MPI_Send(local_str, chunk_size, MPI_CHAR, i, 0, MPI_COMM_WORLD);
         }
     }
@@ -60,8 +62,7 @@ int main(int argc, char **argv) {
     MPI_Recv(local_str, chunk_size, MPI_CHAR, 0, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
 
     // Esto es para comprobar qué se envía a cada proceso.
-    printf("Rank:%d Chunk_size:%d Str:%c%c\n",rank,chunk_size,local_str[0],local_str[1]);
-
+    printf("Rank:%d Chunk_size:%d \n",rank,chunk_size);
 
     // Contar las repeticiones de la letra en el trozo de la cadena correspondiente a este proceso.
     for (i = 0; i < chunk_size; i++) {
@@ -69,7 +70,6 @@ int main(int argc, char **argv) {
             local_count++;
         }
     }
-
 
     // Envia el resultado al proceso 0, y si es el proceso 0, se reciben todas las soluciones de los demás procesos.
     if (rank != 0) {
@@ -81,9 +81,9 @@ int main(int argc, char **argv) {
             MPI_Recv(&local_count, 1, MPI_INT, i, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
             count += local_count;
         }
-        // Espera tiempo para que se printee mas tarde.
-        for (int j = 0; j < 10; ++j);
-        printf("%s\n",str);
+
+        printf("Letra buscada: %c\n",letter);
+        printf("Cadena: %s\n",str);
         printf("La letra '%c' aparece %d veces en la cadena.\n", letter, count);
     }
 
