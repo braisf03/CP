@@ -1,6 +1,6 @@
-# Concurrencia y Paralelismo
+# Concorrencia e Paralelismo
 
-Prácticas Concurrencia y Paralelismo (curso 2022/23)
+Prácticas Concorrencia e Paralelismo (curso 2022/23)
 
 ## Calificaciones
 
