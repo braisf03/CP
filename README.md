@@ -1,6 +1,6 @@
-# Concorrencia e Paralelismo
+# Concurrencia y Paralelismo
 
-Prácticas Paradigmas de Programación (curso 2022/23)
+Prácticas Concurrencia y Paralelismo (curso 2022/23)
 
 ## Calificaciones
 
