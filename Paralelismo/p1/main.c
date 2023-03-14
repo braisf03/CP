@@ -46,16 +46,25 @@ int main(int argc, char **argv) {
 
     // Dividir la cadena en trozos iguales.
     int chunk_size = n / size;
+    int last_chunk_size = n - (size - 1) * chunk_size;
+    if (rank == size - 1) {
+        chunk_size = last_chunk_size;
+    }
     char *local_str = malloc((chunk_size-1)*sizeof(char));
 
     // Enviar los trozos de la cadena a cada proceso.
     if (rank == 0) { // Si el proceso es el 0, se envia cada trozo de la cadena a cada MPI.
 
-        for (i = 0; i < size; i++) {
+        for (i = 0; i < size - 1; i++) {
+
             strncpy(local_str, str + i * chunk_size, chunk_size);
-            local_str[chunk_size]='\0';
+            local_str[chunk_size] = '\0';
             MPI_Send(local_str, chunk_size, MPI_CHAR, i, 0, MPI_COMM_WORLD);
         }
+        // El último trozo lo envía el proceso 0.
+        strncpy(local_str, str + i * chunk_size, last_chunk_size);
+        local_str[last_chunk_size] = '\0';
+        MPI_Send(local_str, last_chunk_size, MPI_CHAR, i, 0, MPI_COMM_WORLD);
     }
 
     // Recibir el trozo de la cadena correspondiente a este proceso.
