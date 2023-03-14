@@ -61,7 +61,7 @@ int main(int argc, char **argv) {
             local_str[chunk_size] = '\0';
             MPI_Send(local_str, chunk_size, MPI_CHAR, i, 0, MPI_COMM_WORLD);
         }
-        // El último trozo se envia de manera separada.
+        // El último trozo se envia por separado.
         strncpy(local_str, str + i * chunk_size, last_chunk_size);
         local_str[last_chunk_size] = '\0';
         MPI_Send(local_str, last_chunk_size, MPI_CHAR, i, 0, MPI_COMM_WORLD);
