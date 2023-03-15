@@ -12,5 +12,5 @@ La carga de trabajo se debe repartir con un bucle for con "paso" i+=numprocs en 
 
 Para terminar el proceso 0 debe recoger el número de aparicioenes detectada en cada proceso (con MPI_Recv).
 
-Nota: MPI_Send y MPI_Recv no separan como deben la cadena a, por lo tanto es probable que si
+Nota: MPI_Send y MPI_Recv no separan como deben la cadena, por lo tanto es probable que si
 tienes un número de procesos que no divida (en números enteros ) a la cadena puede dar problemas.
