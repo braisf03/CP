@@ -3,7 +3,17 @@
 #include <mpi/mpi.h>
 #include <string.h>
 
-// Funcion que inicializa la cadena de longitud n.
+/*
+ * Para ejecutarlo hay que tener instalada la librería OpenMPI.
+ * Cuando lo tengas para compilarlo: mpicc main.c -o p1,
+ * y para ejecutarlo: mpirun -np x --oversubscribe -/p1 y M
+ * Siendo x el número de procesos, y la longitud de la cadena y
+ * M la letra a buscar en la cadena.
+ * Usa el oversubscribe xq a veces puede ser que no tenga suficientes
+ * nodos para ejecutarse, asi se sobreescriben y puedes usar mas.
+ */
+
+// Función que inicializa la cadena de longitud n.
 void inicializaCadena(char *cadena, int n) {
     int i;
     for (i = 0; i < n / 2; i++) {
@@ -23,7 +33,7 @@ void inicializaCadena(char *cadena, int n) {
 int main(int argc, char **argv) {
     // Si no tenemos 3 argumentos salimos del programa.
     if(argc != 3){
-        printf("Numero incorrecto de parametros\nLa sintaxis debe ser: program n L\n"
+        printf("Número incorrecto de parámetros\nLa sintaxis debe ser: program n L\n"
                "  program es el nombre del ejecutable\n  n es el tamaño de la cadena a generar\n"
                "  L es la letra de la que se quiere contar apariciones (A, C, G o T)\n");
         exit(1);
@@ -50,19 +60,19 @@ int main(int argc, char **argv) {
     if (rank == size - 1) {
         chunk_size = last_chunk_size;
     }
-    char *local_str = malloc((chunk_size-1)*sizeof(char));
+    char *local_str = malloc(sizeof(char));
 
     // Enviar los trozos de la cadena a cada proceso.
-    if (rank == 0) { // Si el proceso es el 0, se envia cada trozo de la cadena a cada MPI.
-
+    if (rank == 0) { // Si el proceso es el 0, se envía cada trozo de la cadena a cada MPI.
+        printf("Letra buscada: %c\n",letter);
+        printf("Cadena: %s\n",str);
         for (i = 0; i < size - 1; i++) {
-
-            strncpy(local_str, str + i * chunk_size, chunk_size);
+            memcpy(local_str, str + i * chunk_size, chunk_size);
             local_str[chunk_size] = '\0';
             MPI_Send(local_str, chunk_size, MPI_CHAR, i, 0, MPI_COMM_WORLD);
         }
-        // El último trozo se envia por separado.
-        strncpy(local_str, str + i * chunk_size, last_chunk_size);
+        // El último trozo se envía por separado.
+        memcpy(local_str, str + i * chunk_size, last_chunk_size);
         local_str[last_chunk_size] = '\0';
         MPI_Send(local_str, last_chunk_size, MPI_CHAR, i, 0, MPI_COMM_WORLD);
     }
@@ -80,7 +90,7 @@ int main(int argc, char **argv) {
         }
     }
 
-    // Envia el resultado al proceso 0, y si es el proceso 0, se reciben todas las soluciones de los demás procesos.
+    // Envía el resultado al proceso 0, y si es el proceso 0, se reciben todas las soluciones de los demás procesos.
     if (rank != 0) {
         MPI_Send(&local_count, 1, MPI_INT, 0, 0, MPI_COMM_WORLD);
     } else {
@@ -90,9 +100,6 @@ int main(int argc, char **argv) {
             MPI_Recv(&local_count, 1, MPI_INT, i, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
             count += local_count;
         }
-
-        printf("Letra buscada: %c\n",letter);
-        printf("Cadena: %s\n",str);
         printf("La letra '%c' aparece %d veces en la cadena.\n", letter, count);
     }
 
@@ -100,5 +107,6 @@ int main(int argc, char **argv) {
     MPI_Finalize();
     free(str);
     free(local_str);
+
     return 0;
 }
