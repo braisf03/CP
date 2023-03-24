@@ -2,6 +2,16 @@
 #include <stdlib.h>
 #include <mpi/mpi.h>
 
+/*
+ * Para ejecutarlo hay que tener instalada la librería OpenMPI.
+ * Cuando lo tengas para compilarlo: mpicc main.c -o p1,
+ * y para ejecutarlo: mpirun -np x --oversubscribe -/p1 y M
+ * Siendo x el número de procesos, y la longitud de la cadena y
+ * M la letra a buscar en la cadena.
+ * Usa el oversubscribe xq a veces puede ser que no tenga suficientes
+ * nodos para ejecutarse, asi se sobreescriben y puedes usar mas.
+ */
+
 // Función que inicializa la cadena de longitud n.
 void inicializaCadena(char *cadena, int n){
     int i;
