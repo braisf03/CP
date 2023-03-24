@@ -2,6 +2,9 @@
 En esta práctica se pide realizar un implementación SPMD de un programa que cuenta cuantas letras hay
 en una cadena en particular.
 
+El main.c separa la cadena en partes y manda cada trozo a un proceso distinto, el actualizado se manda
+la cadena desde el proceso 0 para respetar que la entrada por linea de comando debe hacerla el mismo.
+
 ## Enunciado ##
 Para ello se deben usar las funciones MPI (Message Passing Interface), en las que el proceso 0 debe 
 hacer la entrada/salida (scanf/printf) y debe distribuir *n* y *L* al resto de procesos (con MPI_Send).
