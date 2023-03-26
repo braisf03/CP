@@ -51,7 +51,7 @@ int main(int argc, char **argv) {
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     MPI_Comm_size(MPI_COMM_WORLD, &size);
 
-    if (rank == 0) { // Si el proceso es el 0, se envía cada trozo de la cadena a cada MPI.
+    if (rank == 0) { // Si el proceso es el 0, se envían las variables al resto de procesos.
 
         L = *argv[2];
         n = atoi(argv[1]);
@@ -69,14 +69,14 @@ int main(int argc, char **argv) {
         }
 
     }else{
-        // Recibir el trozo de la cadena correspondiente a este proceso.
+        // Recibir n, L y la cadena.
         MPI_Recv(&L, 1, MPI_CHAR, 0, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
         MPI_Recv(&n, 1, MPI_INT, 0, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
         str=malloc(n*sizeof(char));
         MPI_Recv(str, n, MPI_CHAR, 0, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
     }
 
-    // Contar las repeticiones de la letra en el trozo de la cadena correspondiente a este proceso.
+    // Contar las repeticiones de la letra en la cadena desde rank hasta n haciendo el paso.
     for (i = rank; i < n; i+=size) {
         if (str[i] == L) {
             local_count++;
