@@ -5,9 +5,12 @@ en una cadena en particular.
 El main.c separa la cadena en partes y manda cada trozo a un proceso distinto, en el actualizado se manda
 la cadena íntegra desde el proceso 0 para respetar que la entrada por linea de comando debe hacerla el mismo.
 
+El main(Actualizado).c manda la letra, la longitud de la cadena y la cadena a distintos procesos que con el
+paso i=+numprocs barren la cadena global para ver la cantidad de veces que aparece la letra en cuestión.
+
 ## Enunciado ##
 Para ello se deben usar las funciones MPI (Message Passing Interface), en las que el proceso 0 debe 
-hacer la entrada/salida (scanf/printf) y debe distribuir *n* y *L* al resto de procesos (con MPI_Send).
+hacer la entrada/salida (argv/printf) y debe distribuir *n* y *L* al resto de procesos (con MPI_Send).
 
 Nota: *n* es la longitud de la cadena y *L* la letra ser buscada.
 
