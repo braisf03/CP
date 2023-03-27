@@ -61,7 +61,7 @@ int main(int argc, char *argv[]) {
     if (rank != 0) {
         cadena = malloc((n + 1) * sizeof(char));
     }
-    // Y se manda la cadena
+    // Y se manda la cadena.
     MPI_Bcast(cadena, n+1, MPI_CHAR, 0, MPI_COMM_WORLD);
 
     // Todos los procesos buscan la letra con el paso i+=numprocs.
