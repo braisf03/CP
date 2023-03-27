@@ -8,7 +8,7 @@ paso i=+numprocs barren la cadena global para ver la cantidad de veces que apare
 Para ello se deben usar las funciones MPI (Message Passing Interface), en las que el proceso 0 debe 
 hacer la entrada/salida (argv/printf) y debe distribuir *n* y *L* al resto de procesos (con MPI_Send).
 
-Nota: *n* es la longitud de la cadena y *L* la letra ser buscada. Ahora con operación colectiva MPI!
+Nota: *n* es la longitud de la cadena y *L* la letra ser buscada. Ahora con operación colectiva MPI! `#f03c15`
 
 La carga de trabajo se debe repartir con un bucle for con "paso" i+=numprocs en vez de i++.
 
