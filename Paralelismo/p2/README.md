@@ -18,3 +18,24 @@ Para terminar el proceso 0 debe recoger el número de aparicioenes detectada en 
 
 Nota: MPI_Send y MPI_Recv no separan como deben la cadena, por lo tanto es probable que si
 tienes un número de procesos que no divida (en números enteros ) a la cadena puede dar problemas.
+
+## Enunciado (Parte 2) ##
+
+Se pide implementar una función colectiva en árbol binomial, implementación que
+denominaremos MPI BinomialColectiva, que utilizaremos *SOLO* en la distribución de n y L.
+
+Implementación de Bcast con árbol binomial (MPI BinomialBcast):
+Mismos parámetros que MPI Bcast (consultar p ́agina man de MPI Bcastpara obtener cabecera),
+asumiendo por simplicidad que el root es el 0.
+En el paso “i” los procesos con myrank < 2i−1 se comunican con el proceso myrank + 2⁽î⁻¹⁾.
+
+
+
+
+Posteriormente introducci ́on de implementaci ́on propia de colectiva
+SOLO para la recolecci ́on de count, inicialmente utilizando las
+mismas operaciones de Send/Recv que en la implementaci ́on sin
+colectivas (bucle for de Recv), implementaci ́on que denominaremos
+MPI FlattreeColectiva. Asumir que la operaci ́on a realizar ser ́a una
+suma. El resto de par ́ametros de la cabecera deben ser los mismos
+que los de la colectiva est ́andar de MPI (incluido controlar el error).
