@@ -28,10 +28,10 @@ Para la implementación de Bcast con árbol binomial (MPI BinomialBcast): Mismos
 (consultar página man de MPI Bcast para obtener cabecera), asumiendo por simplicidad que el root es el 0.
 En el paso “i” los procesos con myrank < 2⁽ᶦ⁻¹⁾ se comunican con el proceso myrank + 2⁽ᶦ⁻¹⁾.
 
-
-
-Posteriormente implementaremos una función propia de colectivaSOLO para la recolecci ́on de count,
+Posteriormente implementaremos una función propia de colectiva *SOLO* para la recolección de count,
 inicialmente utilizando las mismas operaciones de Send/Recv que en la implementación sin
-colectivas (bucle for de Recv), implementación que denominaremos MPI FlattreeColectiva. 
-Asumir que la operaci ́on a realizar ser ́a una suma. El resto de par ́ametros de la cabecera
-deben ser los mismos que los de la colectiva est ́andar de MPI (incluido controlar el error).
+colectivas (bucle for de Recv), implementación que denominaremos MPI FlattreeColectiva.
+
+Nota: asumir que la operación a realizar será una suma. 
+
+El resto de parámetros de la cabecera deben ser los mismos que los de la colectiva estándar de MPI (incluido controlar el error).
