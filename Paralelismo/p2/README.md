@@ -4,7 +4,7 @@ En esta práctica se pide realizar una extensión de la práctica 1 hecha anteri
 El main.c manda la letra, la longitud de la cadena y la cadena a distintos procesos que con el
 paso i=+numprocs barren la cadena global para ver la cantidad de veces que aparece la letra en cuestión.
 
-## Enunciado(Parte 1) ##
+## Enunciado (Parte 1) ##
 Para ello se deben usar las funciones MPI (Message Passing Interface), en las que el proceso 0 debe 
 hacer la entrada/salida (scanf/printf) y debe distribuir *n* y *L* al resto de procesos (con MPI_Send).
 **Ahora con operación colectiva MPI!**
