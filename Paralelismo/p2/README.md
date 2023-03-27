@@ -24,17 +24,14 @@ tienes un número de procesos que no divida (en números enteros ) a la cadena p
 Se pide implementar una función colectiva en árbol binomial, implementación que
 denominaremos MPI BinomialColectiva, que utilizaremos *SOLO* en la distribución de n y L.
 
-Implementación de Bcast con árbol binomial (MPI BinomialBcast):Mismos parámetros que MPI Bcast 
-(consultar p ́agina man de MPI Bcastpara obtener cabecera), asumiendo por simplicidad que el root es el 0.
+Para la implementación de Bcast con árbol binomial (MPI BinomialBcast): Mismos parámetros que MPI Bcast 
+(consultar página man de MPI Bcast para obtener cabecera), asumiendo por simplicidad que el root es el 0.
 En el paso “i” los procesos con myrank < 2⁽ᶦ⁻¹⁾ se comunican con el proceso myrank + 2⁽ᶦ⁻¹⁾.
 
 
 
-
-Posteriormente introducci ́on de implementaci ́on propia de colectiva
-SOLO para la recolecci ́on de count, inicialmente utilizando las
-mismas operaciones de Send/Recv que en la implementaci ́on sin
-colectivas (bucle for de Recv), implementaci ́on que denominaremos
-MPI FlattreeColectiva. Asumir que la operaci ́on a realizar ser ́a una
-suma. El resto de par ́ametros de la cabecera deben ser los mismos
-que los de la colectiva est ́andar de MPI (incluido controlar el error).
+Posteriormente implementaremos una función propia de colectivaSOLO para la recolecci ́on de count,
+inicialmente utilizando las mismas operaciones de Send/Recv que en la implementación sin
+colectivas (bucle for de Recv), implementación que denominaremos MPI FlattreeColectiva. 
+Asumir que la operaci ́on a realizar ser ́a una suma. El resto de par ́ametros de la cabecera
+deben ser los mismos que los de la colectiva est ́andar de MPI (incluido controlar el error).
