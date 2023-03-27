@@ -12,7 +12,7 @@ Nota: *n* es la longitud de la cadena y *L* la letra ser buscada. **Ahora con op
 
 La carga de trabajo se debe repartir con un bucle for con "paso" i+=numprocs en vez de i++.
 
-Para terminar el proceso 0 debe recoger el número de aparicioenes detectada en cada proceso (con MPI_Recv). 
+Para terminar el proceso 0 debe recoger el número de aparicioenes detectada en cada proceso (con MPI_Recv).
 **Ahora con operación colectiva MPI!**
 
 Nota: MPI_Send y MPI_Recv no separan como deben la cadena, por lo tanto es probable que si
