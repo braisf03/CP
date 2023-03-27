@@ -24,8 +24,8 @@ tienes un número de procesos que no divida (en números enteros ) a la cadena p
 Se pide implementar una función colectiva en árbol binomial, implementación que
 denominaremos MPI BinomialColectiva, que utilizaremos *SOLO* en la distribución de n y L.
 
-Implementación de Bcast con árbol binomial (MPI BinomialBcast):
-Mismos parámetros que MPI Bcast (consultar p ́agina man de MPI Bcastpara obtener cabecera), asumiendo por simplicidad que el root es el 0.
+Implementación de Bcast con árbol binomial (MPI BinomialBcast):Mismos parámetros que MPI Bcast 
+(consultar p ́agina man de MPI Bcastpara obtener cabecera), asumiendo por simplicidad que el root es el 0.
 En el paso “i” los procesos con myrank < 2⁽ᶦ⁻¹⁾ se comunican con el proceso myrank + 2⁽ᶦ⁻¹⁾.
 
 
