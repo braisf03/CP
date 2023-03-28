@@ -11,15 +11,15 @@
  * que MPI_Bcast pero con forma de árbol binomial, y la función
  * MPI_FlattreeColectiva que hace lo mismo que MPI_Reduce pero
  * al suponer que ya vamos a hacer una operación MPI_SUM no
- * ponemos ese campo en la cabecera. Se puede intercambiar 
+ * ponemos ese campo en la cabecera. Se puede intercambiar
  * las funciones propias por las originales de MPI y funciona
- * exactamente igual en todos los casos, solo hay que añadir 
+ * exactamente igual en todos los casos, solo hay que añadir
  * MPI_SUM al campo extra de MPI_Reduce.
  */
 
 // Esta función reemplaza a MPI_Bcast con sus mismos argumentos exactos, suponemos que el root es el proceso 0.
 int MPI_BinomialColectiva(void * buf, int count, MPI_Datatype datatype, int root, MPI_Comm comm){
-    int numprocs , rank;
+    int numprocs , rank,error;
 
     // Se inicia el MPI.
     MPI_Comm_size(MPI_COMM_WORLD, &numprocs);
@@ -29,12 +29,19 @@ int MPI_BinomialColectiva(void * buf, int count, MPI_Datatype datatype, int root
     for(int i=1; pow(2,i-1) <= numprocs; i++){
         // Si el proceso estas dentro del grupo de los que puede enviar y existe destinatario se envía el mensaje con MPI_Send.
         if(rank < pow(2,i-1) && rank+pow(2,i-1) < numprocs){
-            MPI_Send(buf, count, datatype, rank+(int)pow(2,i-1), 0, comm);
+            error=MPI_Send(buf, count, datatype, rank+(int)pow(2,i-1), 0, comm);
+            if(error!=MPI_SUCCESS){
+                return error;
+            }
         }
 
         // Y los destinatarios reciben el mensaje con MPI_Recv.
-        if(rank >= pow(2,i-1) && rank < pow(2,i))
-            MPI_Recv(buf, count, datatype, rank-(int)pow(2,i-1), 0, comm, MPI_STATUS_IGNORE);
+        if(rank >= pow(2,i-1) && rank < pow(2,i)){
+            error=MPI_Recv(buf, count, datatype, rank-(int)pow(2,i-1), 0, comm, MPI_STATUS_IGNORE);
+            if(error!=MPI_SUCCESS){
+                return error;
+            }
+        }
     }
     // Si no hay ningún problema se manda un MPI_SUCCESS.
     return MPI_SUCCESS;
@@ -43,7 +50,7 @@ int MPI_BinomialColectiva(void * buf, int count, MPI_Datatype datatype, int root
 // Esta función sustituye a la función MPI_Reduce, pero al suponer que ya es MPI_SUM la operación le quitamos ese campo.
 int MPI_FlattreeColectiva(void * buff, void *recvbuff, int count,MPI_Datatype datatype, int root, MPI_Comm comm){
     // Variables necesarias
-    int numprocs,rank;
+    int numprocs,rank,error;
     int count1,total_count;
 
     //Realizamos el control de errores
@@ -75,14 +82,20 @@ int MPI_FlattreeColectiva(void * buff, void *recvbuff, int count,MPI_Datatype da
         // Se van recibiendo las sumas y se suman a totalcount.
         for(int i=0;i<numprocs;i++){
             if(i!=root){
-                MPI_Recv(&count1,count,datatype,MPI_ANY_SOURCE,0,comm,MPI_STATUS_IGNORE);
+                error=MPI_Recv(&count1,count,datatype,MPI_ANY_SOURCE,0,comm,MPI_STATUS_IGNORE);
+                if(error!=MPI_SUCCESS){
+                    return error;
+                }
                 total_count+= count1;
             }
         }
         *(int*) recvbuff = total_count;
     }else{
         // Si no es el proceso 0, envía su suma al proceso 0.
-        MPI_Send(buff,1,datatype,root,0,comm);
+        error=MPI_Send(buff,1,datatype,root,0,comm);
+        if(error!=MPI_SUCCESS){
+            return error;
+        }
     }
     // Y salimos.
     return MPI_SUCCESS;
