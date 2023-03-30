@@ -12,7 +12,6 @@
    T -> 3
    N -> 4*/
 
-
 #define M  1000000 // Number of sequences
 #define N  200  // Number of bases per sequence
 
@@ -48,21 +47,26 @@ int base_distance(int base1, int base2) {
 
 int main(int argc, char *argv[]) {
 
+    //Variables necesarias.
     int i, j, numprocs, rank, rows;
     int *data1, *data2;
     int *result;
     struct timeval tc1, tc2, tt1, tt2;
     long comp_time, trans_time;
 
+    // Iniciamos el MPI.
     MPI_Init(&argc, &argv);
     MPI_Comm_size(MPI_COMM_WORLD, &numprocs);
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
+    // Aquí establecemos la longitud de cada parte a enviar, se utiliza el pudding, haciendo que si el número de
+    // procesos no divide a la cadena se rellena un  trozo de memoria con "basura" para que no salte un error.
     rows = M / numprocs;
     if (M%numprocs!=0) {
         rows++;
     }
 
+    // Si el rango es 0 se declaran las matrices y se inicializan.
     if (rank == 0) {
         data1 = (int *) malloc(M * N * sizeof(int));
         data2 = (int *) malloc(M * N * sizeof(int));
@@ -76,10 +80,12 @@ int main(int argc, char *argv[]) {
         }
     }
 
+    // Para cada proceso se inicializa una matriz local en la que se va a almacenar el trozo de la cadena que le toca.
     int *local_data1 = malloc(rows * N * sizeof(int));
     int *local_data2 = malloc(rows * N * sizeof(int));
     int *local_result = malloc(rows * sizeof(int));
 
+    // Se envían los trozos de la cadena a cada proceso con MPI_Scatter y se mide su tiempo con time.h.
     gettimeofday(&tt1, NULL);
     MPI_Scatter(data1, rows * N, MPI_INT, local_data1, rows * N, MPI_INT, 0, MPI_COMM_WORLD);
     MPI_Scatter(data2, rows * N, MPI_INT, local_data2, rows * N, MPI_INT, 0, MPI_COMM_WORLD);
@@ -87,6 +93,7 @@ int main(int argc, char *argv[]) {
 
     trans_time = (tt2.tv_usec - tt1.tv_usec) + 1000000 * (tt2.tv_sec - tt1.tv_sec);
 
+    // Se realizan las operaciones para calcular la distancia de las dos cadenas de ADN y se guardan en un resultado, midiendo su tiempo.
     gettimeofday(&tc1, NULL);
     for (i = 0; i < rows - 1; i++) {
         local_result[i] = 0;
@@ -94,11 +101,11 @@ int main(int argc, char *argv[]) {
             local_result[i] += base_distance(local_data1[i * N + j], local_data2[i * N + j]);
         }
     }
-
     gettimeofday(&tc2, NULL);
 
     comp_time = (tc2.tv_usec - tc1.tv_usec) + 1000000 * (tc2.tv_sec - tc1.tv_sec);
 
+    //Luego se envían los resultados al proceso 0 con MPI_Gather y se mide su tiempo con time.h.
     gettimeofday(&tt1, NULL);
     MPI_Gather(local_result, rows, MPI_INT, result, rows, MPI_INT, 0, MPI_COMM_WORLD);
     gettimeofday(&tt2, NULL);
@@ -107,26 +114,32 @@ int main(int argc, char *argv[]) {
 
     /*Display result */
     if (DEBUG) {
+        // Si DEBUG es 1 se imprime el vector resultado.
         if (rank == 0) {
             for (i = 0; i < M; i++) {
                 printf(" %d \t ", result[i]);
             }
         }
     } else {
+        // Si DEBUG es 0 se imprime el tiempo computacional y el tiempo de transacciones.
         printf("Process(%d):\t Comp_Time: %lf (seconds)\t Trans_Time %lf (seconds) \n", rank, (double) comp_time / 1E6,
                (double) trans_time / 1E6);
     }
 
+    // Luego se libera la memoria de cada cadena inicializada en el proceso 0.
     if(rank==0){
         free(data1);
         free(data2);
         free(result);
     }
 
+    // Y se liberan las cadenas de cada proceso.
     free(local_data1);
     free(local_data2);
+    free(local_result);
 
+    // Se cierra el MPI y se finaliza el programa.
     MPI_Finalize();
-
     return 0;
 }
+
