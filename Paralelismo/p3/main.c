@@ -46,29 +46,51 @@ int base_distance(int base1, int base2) {
     return 2;
 }
 
+/*
+Dividid las matrices entre p procesos, cada uno con rows = M/p filas
+(por simplicidad, empezad con el caso en que consideraremos que el
+n ́umero de procesos es m ́ultiplo de M: M mod p = 0). VAMOS ASI PRIMERO
+
+Cada tarea se encargar ́a de calcular M/p elementos del vector resultado. ESTO SE HACE EN ROWS
+
+En la entrega considerad cualquier n ́umero de procesos, no solo m ́ultiplos
+de M. ESTO AUN NO QUE ME PIERDO
+
+La inicializaci ́on de la matriz la hace el proceso 0. ESTO SE HACE
+
+Distribuir datos a todos los procesos con operaciones colectivas.
+
+Recolecci ́on del vector resultado con operaciones colectivas.
+
+La E/S (printf) la hace el proceso 0.
+
+Imprimid por separado tiempo de comunicaciones y tiempo computaci ́on
+de cada proceso.
+
+*/
+
 int main(int argc, char *argv[]) {
 
-    // Variables necesarias
-    int i, j, numprocs, rank;
+    int i, j, numprocs, rank, rows;
     int *data1, *data2;
-    int *result, *local_result;
-    int *local_data1, *local_data2;
-    int *tam, *despl;
-    struct timeval temp_comp1, temp_comp2, temp_transf1, temp_transf2;
-    float temp_comp, temp_transf;
+    int *result;
+    struct timeval tc1, tc2, tt1, tt2;
+    long comp_time, trans_time;
 
-    // Iniciamos el MPI.
     MPI_Init(&argc, &argv);
     MPI_Comm_size(MPI_COMM_WORLD, &numprocs);
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
-    // Inicializamos las variables donde van las matrices.
-    data1 = (int *) malloc(M * N * sizeof(int));
-    data2 = (int *) malloc(M * N * sizeof(int));
-    result = (int *) malloc(M * sizeof(int));
+    rows = M / numprocs;
+    if (M%numprocs!=0) {
+        rows++;
+    }
 
-    // Inicializamos las matrices en el proceso 0.
     if (rank == 0) {
+        data1 = (int *) malloc(M * N * sizeof(int));
+        data2 = (int *) malloc(M * N * sizeof(int));
+        result = (int *) malloc(rows* N * sizeof(int));
+        /* Initialize Matrices */
         for (i = 0; i < M; i++) {
             for (j = 0; j < N; j++) {
                 data1[i * N + j] = (i + j) % 5;
@@ -77,83 +99,34 @@ int main(int argc, char *argv[]) {
         }
     }
 
-    // Mandamos a cada proceso el array result y medimos su tiempo de transferencia con gettimeofday.
-    gettimeofday(&temp_transf1, NULL);
-    MPI_Bcast(result, N, MPI_INT, 0, MPI_COMM_WORLD);
-    gettimeofday(&temp_transf2, NULL);
+    int *local_data1 = malloc(rows * N * sizeof(int));
+    int *local_data2 = malloc(rows * N * sizeof(int));
+    int *local_result = malloc(rows * sizeof(int));
 
-    // Lo guardamos en la variable temp_transf.
-    temp_transf = (temp_transf2.tv_usec - temp_transf1.tv_usec) + 1000000 * (temp_transf2.tv_sec - temp_transf1.tv_sec);
+    gettimeofday(&tt1, NULL);
+    MPI_Scatter(data1, rows * N, MPI_INT, local_data1, rows * N, MPI_INT, 0, MPI_COMM_WORLD);
+    MPI_Scatter(data2, rows * N, MPI_INT, local_data2, rows * N, MPI_INT, 0, MPI_COMM_WORLD);
+    gettimeofday(&tt2, NULL);
 
-    // Calculamos el numero de rows que va a cada proceso.
-    int rows = N / numprocs;
-    // Si es el último miramos si la division no es entrea y le sumamos si hay una parte que sobra.
-    if (rank == (numprocs - 1)) {
-        rows = rows + (N % numprocs);
-    }
+    trans_time = (tt2.tv_usec - tt1.tv_usec) + 1000000 * (tt2.tv_sec - tt1.tv_sec);
 
-    // Reservamos memoria para las matrices locales de cada proceso, estas van a recibir los trozos de las matrices.
-    local_data1 = malloc(N * rows * sizeof(int));
-    local_data2 = malloc(N * rows * sizeof(int));
-    local_result = malloc(N * sizeof(int));
-
-    // Si el proceso es el 0, creamos sentcounts y dipl para la la función MPI_Scatterv ( no tengo ni idea de que es esto xd).
-    if (rank == 0) {
-        tam = malloc(sizeof(int) * numprocs);
-        despl = malloc(sizeof(int) * numprocs);
-        for (i = 0; i < numprocs; i++) {
-            if (i == numprocs - 1) {
-                tam[i] = N * (rows + (N % numprocs));
-            } else {
-                tam[i] = rows * N;
-            }
-        }
-        despl[0] = 0;
-        for (i = 1; i < numprocs; i++){
-            despl[i] = despl[i - 1] + tam[i - 1];
-        }
-    }
-
-    // Mandamos los trozos de las matrices originales y medimos su tiempo y lo sumamos.
-    gettimeofday(&temp_transf1, NULL);
-    MPI_Scatterv(data1, tam, despl, MPI_INT, local_data1, rows * N, MPI_INT, 0, MPI_COMM_WORLD);
-    MPI_Scatterv(data2, tam, despl, MPI_INT, local_data2, rows * N, MPI_INT, 0, MPI_COMM_WORLD);
-    gettimeofday(&temp_transf2, NULL);
-
-    temp_transf += (temp_transf2.tv_usec - temp_transf1.tv_usec)+ 1000000
-                                                                    * (temp_transf2.tv_sec - temp_transf1.tv_sec);
-
-
-    // Parte computacional, donde hacemos el resultado de cada trozo de cadena y medimos su tiempo.
-    gettimeofday(&temp_comp1, NULL);
-    for (i = 0; i < rows; i++) {
+    gettimeofday(&tc1, NULL);
+    for (i = 0; i < rows - 1; i++) {
         local_result[i] = 0;
         for (j = 0; j < N; j++) {
-            local_result[i] += base_distance(local_data1[i], local_data2[i]);
-        }
-    }
-    gettimeofday(&temp_comp2, NULL);
-
-    temp_transf += (temp_transf2.tv_usec - temp_transf1.tv_usec) + 1000000 * (temp_comp2.tv_sec - temp_comp1.tv_sec);
-
-    // Creamos sentcounts y displ para MPI_Gatherv como para MPI_Scatterv.
-    if (rank == 0) {
-        for (i = 0; i < numprocs; i++) {
-            tam[i] = tam[i] / N;
-        }
-        for (i = 1; i < numprocs; i++) {
-            despl[i] = despl[i - 1] + tam[i - 1];
+            local_result[i] += base_distance(local_data1[i * N + j], local_data2[i * N + j]);
         }
     }
 
-    // Enviamos las soluciones al proceso 0 y medimos el tiempo que tardan en recibirse y se suman.
-    gettimeofday(&temp_transf1, NULL);
-    MPI_Gatherv(local_result, rows, MPI_INT, result, tam, despl, MPI_INT, 0, MPI_COMM_WORLD);
-    gettimeofday(&temp_transf2, NULL);
+    gettimeofday(&tc2, NULL);
 
-    temp_transf +=(temp_transf2.tv_usec - temp_transf1.tv_usec) + 1000000 * (temp_transf2.tv_sec - temp_transf1.tv_sec);
+    comp_time = (tc2.tv_usec - tc1.tv_usec) + 1000000 * (tc2.tv_sec - tc1.tv_sec);
 
-    temp_comp = (temp_comp2.tv_usec - temp_comp1.tv_usec) + 1000000 * (temp_comp2.tv_sec - temp_comp1.tv_sec);
+    gettimeofday(&tt1, NULL);
+    MPI_Gather(local_result, rows, MPI_INT, result, rows, MPI_INT, 0, MPI_COMM_WORLD);
+    gettimeofday(&tt2, NULL);
+
+    trans_time += (tt2.tv_usec - tt1.tv_usec) + 1000000 * (tt2.tv_sec - tt1.tv_sec);
 
     /*Display result */
     if (DEBUG) {
@@ -163,17 +136,20 @@ int main(int argc, char *argv[]) {
             }
         }
     } else {
-        printf("Proceso %d:\t Tiempo Computacional = %lf\t Tiempo transferencia = %lf\n",
-               rank, (double) temp_comp / 1E6, (double) temp_transf / 1E6);
+        printf("Process(%d):\t Comp_Time: %lf (seconds)\t Trans_Time %lf (seconds) \n", rank, (double) comp_time / 1E6,
+               (double) trans_time / 1E6);
     }
 
-    // Se libera memoria y se cierra el MPI.
-    free(data1);
-    free(data2);
-    free(local_result);
-    free(result);
+    if(rank==0){
+        free(data1);
+        free(data2);
+        free(result);
+    }
+
+    free(local_data1);
+    free(local_data2);
+
     MPI_Finalize();
 
     return 0;
 }
-
