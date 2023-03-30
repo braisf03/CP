@@ -1,3 +1,0 @@
-/home/brais/Escritorio/Concurrencia y Paralelismo/P2.p/cmake-build-debug/CMakeFiles/P2_p.dir
-/home/brais/Escritorio/Concurrencia y Paralelismo/P2.p/cmake-build-debug/CMakeFiles/edit_cache.dir
-/home/brais/Escritorio/Concurrencia y Paralelismo/P2.p/cmake-build-debug/CMakeFiles/rebuild_cache.dir
