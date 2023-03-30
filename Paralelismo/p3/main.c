@@ -46,29 +46,6 @@ int base_distance(int base1, int base2) {
     return 2;
 }
 
-/*
-Dividid las matrices entre p procesos, cada uno con rows = M/p filas
-(por simplicidad, empezad con el caso en que consideraremos que el
-n ́umero de procesos es m ́ultiplo de M: M mod p = 0). VAMOS ASI PRIMERO
-
-Cada tarea se encargar ́a de calcular M/p elementos del vector resultado. ESTO SE HACE EN ROWS
-
-En la entrega considerad cualquier n ́umero de procesos, no solo m ́ultiplos
-de M. ESTO AUN NO QUE ME PIERDO
-
-La inicializaci ́on de la matriz la hace el proceso 0. ESTO SE HACE
-
-Distribuir datos a todos los procesos con operaciones colectivas.
-
-Recolecci ́on del vector resultado con operaciones colectivas.
-
-La E/S (printf) la hace el proceso 0.
-
-Imprimid por separado tiempo de comunicaciones y tiempo computaci ́on
-de cada proceso.
-
-*/
-
 int main(int argc, char *argv[]) {
 
     int i, j, numprocs, rank, rows;
