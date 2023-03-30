@@ -1,6 +1,8 @@
 # Práctica 3 #
 En esta práctica se va a implementar un programa en paralelo que reciba dos cadenas de ADN y compruebe la similaridad entre ellas.
 
+Se debe hacer la medida de lo similares que son la secuencia i del primerconjunto y la secuencia i del segundo conjunto de ADN.
+
 ## Enunciado ##
 Para ello se dividen las matrices entre p procesos, cada uno con rows = M/p filas
 (por simplicidad, es mejor empezar con el caso en que consideraremos que el
