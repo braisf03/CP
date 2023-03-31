@@ -27,7 +27,7 @@ int MPI_BinomialColectiva(void * buf, int count, MPI_Datatype datatype, int root
 
     // Aqui vamos a usar una estructura de árbol binario tal como se describe en el enunciado.
     for(int i=1; pow(2,i-1) <= numprocs; i++){
-        // Si el proceso estas dentro del grupo de los que puede enviar y existe destinatario se envía el mensaje con MPI_Send.
+        // Si el proceso está dentro del grupo de los que puede enviar y existe destinatario se envía el mensaje con MPI_Send.
         if(rank < pow(2,i-1) && rank+pow(2,i-1) < numprocs){
             error=MPI_Send(buf, count, datatype, rank+(int)pow(2,i-1), 0, comm);
             if(error!=MPI_SUCCESS){
@@ -47,13 +47,13 @@ int MPI_BinomialColectiva(void * buf, int count, MPI_Datatype datatype, int root
     return MPI_SUCCESS;
 }
 
-// Esta función sustituye a la función MPI_Reduce, pero al suponer que ya es MPI_SUM la operación le quitamos ese campo.
+// Esta función sustituye a la función MPI_Reduce.
 int MPI_FlattreeColectiva(void * buff, void *recvbuff, int count,MPI_Datatype datatype, int root, MPI_Comm comm){
     // Variables necesarias
     int numprocs,rank,error;
     int count1,total_count;
 
-    //Realizamos el control de errores
+    //Realizamos el control de errores.
 
     if(datatype != MPI_INT){
         return MPI_ERR_TYPE;
