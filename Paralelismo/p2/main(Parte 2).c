@@ -9,12 +9,9 @@
  * las funciones MPI gestionando los envíos y recibos. Para
  * ello implementamos MPI_BinomialColectiva, que hace lo mismo
  * que MPI_Bcast pero con forma de árbol binomial, y la función
- * MPI_FlattreeColectiva que hace lo mismo que MPI_Reduce pero
- * al suponer que ya vamos a hacer una operación MPI_SUM no
- * ponemos ese campo en la cabecera. Se puede intercambiar
- * las funciones propias por las originales de MPI y funciona
- * exactamente igual en todos los casos, solo hay que añadir
- * MPI_SUM al campo extra de MPI_Reduce.
+ * MPI_FlattreeColectiva que hace lo mismo que MPI_Reduce. Se 
+ * puede intercambiar las funciones propias por las originales 
+ * de MPI y funciona exactamente igual en todos los casos.
  */
 
 // Esta función reemplaza a MPI_Bcast con sus mismos argumentos exactos, suponemos que el root es el proceso 0.
