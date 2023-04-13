@@ -3,17 +3,25 @@
 #include <sys/time.h>
 #include <mpi/mpi.h>
 
-#define DEBUG 0
+#define DEBUG 2
 
 /* Translation of the DNA bases
    A -> 0
    C -> 1
    G -> 2
    T -> 3
-   N -> 4*/
+   N -> 4
+*/
 
-#define M  1000000 // Number of sequences
-#define N  200  // Number of bases per sequence
+#define M  100 // Number of sequences
+#define N  100  // Number of bases per sequence
+
+unsigned int g_seed = 0;
+
+int fast_rand(void) {
+    g_seed = (214013 * g_seed + 2531011);
+    return (g_seed >> 16) % 5;
+}
 
 // The distance between two bases
 int base_distance(int base1, int base2) {
@@ -38,10 +46,6 @@ int base_distance(int base1, int base2) {
         return 1;
     }
 
-    if ((base2 == 2) && (base1 == 1)) {
-        return 1;
-    }
-
     return 2;
 }
 
@@ -62,20 +66,20 @@ int main(int argc, char *argv[]) {
     // Aquí establecemos la longitud de cada parte a enviar, se utiliza el pudding, haciendo que si el número de
     // procesos no divide a la cadena se rellena un  trozo de memoria con "basura" para que no salte un error.
     rows = M / numprocs;
-    if (M%numprocs!=0) {
+    if (M % numprocs != 0) {
         rows++;
     }
 
     // Si el rango es 0 se declaran las matrices y se inicializan.
     if (rank == 0) {
-        data1 = (int *) malloc(M * N * sizeof(int));
-        data2 = (int *) malloc(M * N * sizeof(int));
-        result = (int *) malloc(rows* N * sizeof(int));
+        data1 = (int *) malloc(rows * numprocs * N * sizeof(int));
+        data2 = (int *) malloc(rows * numprocs * N * sizeof(int));
+        result = (int *) malloc(rows * numprocs * sizeof(int));
         /* Initialize Matrices */
         for (i = 0; i < M; i++) {
             for (j = 0; j < N; j++) {
-                data1[i * N + j] = (i + j) % 5;
-                data2[i * N + j] = 4 - data1[i * N + j];
+                data1[i * N + j] = fast_rand();
+                data2[i * N + j] = fast_rand();
             }
         }
     }
@@ -95,7 +99,7 @@ int main(int argc, char *argv[]) {
 
     // Se realizan las operaciones para calcular la distancia de las dos cadenas de ADN y se guardan en un resultado, midiendo su tiempo.
     gettimeofday(&tc1, NULL);
-    for (i = 0; i < rows - 1; i++) {
+    for (i = 0; i < rows; i++) {
         local_result[i] = 0;
         for (j = 0; j < N; j++) {
             local_result[i] += base_distance(local_data1[i * N + j], local_data2[i * N + j]);
@@ -112,28 +116,34 @@ int main(int argc, char *argv[]) {
 
     trans_time += (tt2.tv_usec - tt1.tv_usec) + 1000000 * (tt2.tv_sec - tt1.tv_sec);
 
-    /*Display result */
-    if (DEBUG) {
-        // Si DEBUG es 1 se imprime el vector resultado.
+    /* Display result */
+    if (DEBUG == 1) {
+        if (rank == 0) {
+            int checksum = 0;
+            for (i = 0; i < M; i++) {
+                checksum += result[i];
+            }
+            printf("Checksum: %d\n ", checksum);
+        }
+    } else if (DEBUG == 2) {
         if (rank == 0) {
             for (i = 0; i < M; i++) {
                 printf(" %d \t ", result[i]);
             }
         }
     } else {
-        // Si DEBUG es 0 se imprime el tiempo computacional y el tiempo de transacciones.
         printf("Process(%d):\t Comp_Time: %lf (seconds)\t Trans_Time %lf (seconds) \n", rank, (double) comp_time / 1E6,
                (double) trans_time / 1E6);
     }
 
-    // Luego se libera la memoria de cada cadena inicializada en el proceso 0.
-    if(rank==0){
+    // Luego se libera la memoria de cada matriz inicializada en el proceso 0.
+    if (rank == 0) {
         free(data1);
         free(data2);
         free(result);
     }
 
-    // Y se liberan las cadenas de cada proceso.
+    // Y se liberan las matrices de cada proceso.
     free(local_data1);
     free(local_data2);
     free(local_result);
@@ -142,4 +152,3 @@ int main(int argc, char *argv[]) {
     MPI_Finalize();
     return 0;
 }
-
