@@ -5,8 +5,8 @@ Prácticas Concorrencia e Paralelismo (curso 2022/23)
 ## Calificaciones
 
 **Concorrencia**
-- **Práctica 1:** *NaN*
-- **Práctica 2:** *NaN*
+- **Práctica 1:** *0.75/0.75*
+- **Práctica 2:** *1.25/1.25*
 
 **Paralelismo**
 - **Práctica 1:** *0.25/0.25*
