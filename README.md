@@ -1,10 +1,10 @@
-# Concorrencia e Paralelismo
+# Concurrencia y Paralelismo
 
-Prácticas Concorrencia e Paralelismo (curso 2022/23)
+Prácticas Concurrencia y Paralelismo (curso 2022/23)
 
 ## Calificaciones
 
-**Concorrencia**
+**Concurrencia**
 - **Práctica 1:** *0.75/0.75*
 - **Práctica 2:** *1.25/1.25*
 
